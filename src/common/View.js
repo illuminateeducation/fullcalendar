@@ -190,12 +190,25 @@ var View = FC.View = Class.extend(EmitterMixin, ListenerMixin, {
 
 
 	// Computes what the title at the top of the calendar should be for this view
+	// Updated by Alex Hurst based on suggestions in:
+	// https://github.com/fullcalendar/fullcalendar/issues/2884
 	computeTitle: function() {
+
+		var startDate, endDate;
+
+		if (this.intervalUnit == 'month') {
+			startDate = this.calendar.applyTimezone(this.intervalStart);
+			endDate = this.calendar.applyTimezone(this.intervalEnd);
+		}
+		else {
+			startDate = this.start;
+			endDate = this.end;
+		}
 		return this.formatRange(
 			{
 				// in case intervalStart/End has a time, make sure timezone is correct
-				start: this.calendar.applyTimezone(this.intervalStart),
-				end: this.calendar.applyTimezone(this.intervalEnd)
+				start: startDate,
+				end: endDate
 			},
 			this.opt('titleFormat') || this.computeTitleFormat(),
 			this.opt('titleRangeSeparator')
